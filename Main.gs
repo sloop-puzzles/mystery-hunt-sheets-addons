@@ -2,8 +2,8 @@
 // Last updated 2021-01-20 from https://github.com/mmachenry/mystery-hunt-sheets-addons/blob/master/Main.gs
 
 /**
- * Split a string on regexp match. 
- * 
+ * Split a string on regexp match.
+ *
  * @param {string} str - input to split
  * @param {string} re - regular expression to split on
  * @return an array of the matching substrings
@@ -16,7 +16,7 @@ function regexSplit(str, re) {
 
 /**
  * Given a string, return a cell block with its letters along the diagonal
- * 
+ *
  * @param {string} str - input string
  * @return a block of cells with the input characters along the diagonal
  * @customfunction
@@ -36,7 +36,7 @@ function diagonalize(str) {
 
 /**
  * Take a range and convert it into a column of concatenated rows
- * 
+ *
  * @param {string} vals - selection of cells to concatenate e.g. A1:C5
  * @return a row of cells with the values from the input selection
  * @customfunction
@@ -55,7 +55,7 @@ function linearize(vals) {
 /**
  * Converts a string to capital letters without whitespace or punctuation, and uppercases.
  * e.g. "Hello, World!" => "HELLOWORLD"
- * 
+ *
  * @param {string} text - input text to normalize
  * @return normalized text
  * @customfunction
@@ -66,10 +66,10 @@ function normalizeString(text) {
 
 /**
  * Returns the nth non-whitespace character of the given string, starting at 1.
- * 
+ *
  * NTH("Hello, world!", 6) => "W"
  * nth("abcd", 2, 4) => "BD"
- * 
+ *
  * @param {string} text - input text
  * @param {...number} n - one or more positions to return
  * @return string containing the letters from the specified positions
@@ -91,9 +91,9 @@ function nth(text, n) {
 
 /**
  * Returns the number of times a given character appears in a given string.
- * 
+ *
  * countChar("abaab", "a") => 3
- * 
+ *
  * @param {string} text - input text
  * @param {string} char - character to count
  * @return number of times the character was found
@@ -109,9 +109,9 @@ function countChar(text, char) {
 
 /**
  * Given two strings, return all characters that appear in the same place in both strings.
- * 
+ *
  * commonChars("ghxxhxh", "ghyyh") => "ghh"
- * 
+ *
  * @param {string} x - first string to examine
  * @param {string} y - second string to examine
  * @return string containing common characters
@@ -126,7 +126,7 @@ function commonChars(x, y) {
 }
 
 /** Returns the Caesar shifted string, ignoring non alphabetic letters.
- * 
+ *
  * @param {number} offset
  * @param {string} input
  * @return shifted string
@@ -146,7 +146,7 @@ function caesarShift (offset, input) {
 }
 
 /** The 1-26 index of the given letter, upper or lower case, or null if nonalpha.
- * 
+ *
  * @param {string} input - single letter
  * @return 1-26 for A-Z or a-z, null otherwise
  * @customfunction
@@ -163,7 +163,7 @@ function alphaToNum (input) {
 }
 
 /** Converts 1-26 to alphabetical equivalent.
- * 
+ *
  * @param {number} input - number 1-26
  * @return the numbered letter
  * @customfunction
@@ -177,7 +177,7 @@ function numToAlpha (input) {
 }
 
 /** The point value of a give word using the given point system.
- * 
+ *
  * @param {string} input - word to score
  * @param {map} points - map of letter to value
  * @return total value
@@ -192,7 +192,7 @@ function wordTilePoints (input, points) {
 }
 
 /** The point value of the given word in Scrabble.
- * 
+ *
  * @param {string} input - word to score
  * @return value of the word
  * @customfunction
@@ -203,7 +203,7 @@ function scrabblePoints (input) {
 }
 
 /** The point value of the given word in Words With Friends.
- * 
+ *
  * @param {string} input - word to score
  * @return value of the word
  * @customfunction
@@ -214,7 +214,7 @@ function wordsWithFriendsPoints (input) {
 }
 
 /** Reverse the given string
- * 
+ *
  * @param {string} str - string to reverse
  * @return reversed string
  * @customfunction
@@ -227,7 +227,7 @@ function reverseString(str) {
 }
 
 /** Split a string into individual letters
- * 
+ *
  * @param {string} str - input string
  * @return row of cells containing the individual letters
  * @customfunction
@@ -237,7 +237,7 @@ function splitString(str) {
 }
 
 /** The unique characters of the given string.
- * 
+ *
  * @param {string} text - input string
  * @return string made of the unique letters in the input
  * @customfunction
@@ -264,11 +264,11 @@ function wikiLookup(wpUrl, key) {
   //wpUrl = 'George Washington';
   //key = 'born';
   //returns 1732
-  
+
   if (wpUrl.slice(0,4) !== 'http') {
     wpUrl = wikiUrl(wpUrl)
   }
-  
+
   var cache = CacheService.getScriptCache();
   var wpPage = cache.get(wpUrl);
   if (!wpPage) {
@@ -277,50 +277,50 @@ function wikiLookup(wpUrl, key) {
      cache.put(wpUrl, wpPage);
     } catch(e) {}
   }
-  
+
   var document = XmlService.parse(wpPage);
   var elements = document.getRootElement().getDescendants();
-  var infoBoxTable = elements.filter(function(element) { 
+  var infoBoxTable = elements.filter(function(element) {
     return element.getName &&
       element.getName() === 'table' &&
       element.getAttribute('class') &&
-      element.getAttribute('class').getValue().indexOf('infobox') > -1; 
+      element.getAttribute('class').getValue().indexOf('infobox') > -1;
   })[0];
-  
+
   if (!(infoBoxTable && infoBoxTable.getDescendants)) { return "No infobox found for page: "+wpUrl; }
-  
+
   // look for exact key
   var tableElements = infoBoxTable.getDescendants();
   for (var i=0; i < tableElements.length; ++i) {
     var element = tableElements[i];
     if (element.getName && element.getName() === 'th') {
-      if (element.getValue().toLowerCase().trim() === key.toLowerCase().trim()) {  
-        var j = 1;   
+      if (element.getValue().toLowerCase().trim() === key.toLowerCase().trim()) {
+        var j = 1;
         // find the next <td> element, since text nodes and actual html nodes are interspersed
         while (!(tableElements[i+j].getName && tableElements[i+j].getName() === 'td')) {
-          j += 1; 
+          j += 1;
         }
         return tableElements[i+j].getValue();
       }
     }
   }
-  
+
   // if exact key not found, look for a cell that contains `key`
   var tableElements = infoBoxTable.getDescendants();
   for (var i=0; i < tableElements.length; ++i) {
     var element = tableElements[i];
     if (element.getName && element.getName() === 'th') {
-      if (element.getValue().toLowerCase().trim().indexOf(key.toLowerCase().trim()) > -1) {  
-        var j = 1;   
+      if (element.getValue().toLowerCase().trim().indexOf(key.toLowerCase().trim()) > -1) {
+        var j = 1;
         // find the next <td> element, since text nodes and actual html nodes are interspersed
         while (!(tableElements[i+j].getName && tableElements[i+j].getName() === 'td')) {
-          j += 1; 
+          j += 1;
         }
         return tableElements[i+j].getValue();
       }
     }
   }
-  
+
   return "Key '"+key+"' not found in infobox for page: "+wpUrl;
 }
 
@@ -350,7 +350,7 @@ function nutrimatic(query) {
 
 /**
  * Find the intersection of two sets.
- * 
+ *
  * @param {Array<Array<number>>} setA
  * @param {Array<Array<number>>} setB
  * @return list of cells that exist in both sets
@@ -366,7 +366,7 @@ function intersection(setA, setB) {
 
 /**
  * Find the difference between two sets.
- * 
+ *
  * @param {Array<Array<number>>} setA
  * @param {Array<Array<number>>} setB
  * @return list of cells that don't exist in both sets
@@ -380,3 +380,16 @@ function difference(setA, setB) {
   common.forEach((v,k) => {if (v==1) {res.push(k)}})
   return res;
 }
+
+ * Get the qat url for a query.
+ *
+ * @param {text} The text to turn into a nutrimatic url.
+ * @return A link to the Qat results for this query.
+ * @customfunction
+ */
+function qat(query) {
+  query = encodeURIComponent(query);
+  return 'https://www.quinapalus.com/cgi-bin/qat?pat=' + query + '&ent=Search&dict=0';
+
+}
+
