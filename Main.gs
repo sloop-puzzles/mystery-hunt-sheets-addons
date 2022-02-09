@@ -381,6 +381,7 @@ function difference(setA, setB) {
   return res;
 }
 
+/**
  * Get the qat url for a query.
  *
  * @param {text} The text to turn into a nutrimatic url.
