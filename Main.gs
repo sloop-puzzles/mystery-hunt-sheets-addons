@@ -125,6 +125,29 @@ function commonChars(x, y) {
 	return ret.join("");
 }
 
+/**
+ * Given two strings, return all characters that don't appear in the same place in both strings.
+ *
+ * differentChars("ghxxhxh", "ghyyh") => ["xxxh", "yy"]
+ *
+ * @param {string} x - first string to examine
+ * @param {string} y - second string to examine
+ * @return array containing unique characters to each
+ * @customfunction
+ */
+
+function differentChars(x, y) {
+  var xStr = [];
+  var yStr = [];
+	for (var i = 0; i < x.length || i < y.length; ++i) {
+		if (x[i] != y[i]) {
+      if (x[i]) xStr.push(x[i]);
+      if (y[i]) yStr.push(y[i]);
+    }
+	}
+	return [xStr.join(''), yStr.join('')]
+}
+
 /** Returns the Caesar shifted string, ignoring non alphabetic letters.
  *
  * @param {number} offset
